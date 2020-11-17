@@ -23,7 +23,7 @@ and Please give a star to us and the orignal repo for appreciating our hardwork.
 ## Installing Heroku 
 
 ### The Easy Way
-[![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/anan2005/NanaUpdated)
+[![Deploy To Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/SenseiOfficial/Nana-Remix-Updated)
 
 ## GET STRING SESSION FROM REPL RUN 
 
