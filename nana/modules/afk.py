@@ -1,113 +1,132 @@
-import time
+"""AFK Plugin for Friday
+Syntax: .afk REASON"""
+import asyncio
+import datetime
+from telethon import events
+from telethon.tl import functions, types
+from userbot.utils import admin_cmd
 
-from pyrogram import filters
-
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-
-from nana import app, setbot, Owner, OwnerName, Command, DB_AVAILABLE, edrep
-from nana.helpers.msg_types import Types, get_message_type
-from nana.helpers.parser import mention_markdown, escape_markdown
-
-if DB_AVAILABLE:
-    from nana.modules.database.afk_db import set_afk, get_afk
-
-__MODULE__ = "AFK"
-__HELP__ = """
-Set yourself to afk.
-When marked as AFK, any mentions will be replied to with a message to say you're not available!
-And that mentioned will notify you by your Assistant.
-
-If you're restart your bot, all counter and data in cache will be reset.
-But you will still in afk, and always reply when got mentioned.
-
-──「 **Set AFK status** 」── -> `afk (*reason)` Set yourself to afk, give a reason if need. When someone tag you, 
-you will says in afk with reason, and that mentioned will sent in your assistant PM. 
-
-To exit from afk status, send anything to anywhere, exclude PM and saved message.
-
-* = Optional
-"""
-
-# Set priority to 11 and 12
-MENTIONED = []
-AFK_RESTIRECT = {}
-DELAY_TIME = 60  # seconds
+global USER_AFK  # pylint:disable=E0602
+global afk_time  # pylint:disable=E0602
+global last_afk_message  # pylint:disable=E0602
+USER_AFK = {}
+afk_time = None
+last_afk_message = {}
 
 
-@app.on_message(filters.me & (filters.command("afk", Command)))
-async def afk(_client, message):
-    if not DB_AVAILABLE:
-        await message.edit("Your database is not avaiable!")
-        return
-    if len(message.text.split()) >= 2:
-        set_afk(True, message.text.split(None, 1)[1])
-        await message.edit(
-            "{} is now AFK!\nBecause of {}".format(
-                mention_markdown(message.from_user.id, message.from_user.first_name),
-                message.text.split(None, 1)[1])
+@borg.on(events.NewMessage(outgoing=True))  # pylint:disable=E0602
+async def set_not_afk(event):
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    current_message = event.message.message
+    if ".afk" not in current_message and "yes" in USER_AFK:  # pylint:disable=E0602
+        try:
+            await borg.send_message(  # pylint:disable=E0602
+                Config.PLUGIN_CHANNEL,  # pylint:disable=E0602
+                "#AfkLogger My Boss Went Afk"
             )
-        await setbot.send_message(Owner, "You are now AFK!\nBecause of {}".format(message.text.split(None, 1)[1]))
-    else:
-        set_afk(True, "")
-        await message.edit(
-            "{} is now AFK!".format(mention_markdown(message.from_user.id, message.from_user.first_name)))
-        await setbot.send_message(Owner, "You are now AFK!")
-    await message.stop_propagation()
+        except Exception as e:  # pylint:disable=C0103,W0703
+            await borg.send_message(  # pylint:disable=E0602
+                event.chat_id,
+                "Please set `PLUGIN_CHANNEL` " + \
+                "for the proper functioning of afk functionality " + \
+                "in @FridayOT\n\n `{}`".format(str(e)),
+                reply_to=event.message.id,
+                silent=True
+            )
+        USER_AFK = {}  # pylint:disable=E0602
+        afk_time = None  # pylint:disable=E0602
 
+@borg.on(admin_cmd(pattern=r"afk ?(.*)"))
 
-@app.on_message(filters.mentioned & ~filters.bot, group=11)
-async def afk_mentioned(_client, message):
-    if not DB_AVAILABLE:
+async def _(event):
+    if event.fwd_from:
         return
-    global MENTIONED
-    get = get_afk()
-    if get and get['afk']:
-        if "-" in str(message.chat.id):
-            cid = str(message.chat.id)[4:]
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    global reason
+    USER_AFK = {}
+    afk_time = None
+    last_afk_message = {}
+    reason = event.pattern_match.group(1)
+    if not USER_AFK:  # pylint:disable=E0602
+        last_seen_status = await borg(  # pylint:disable=E0602
+            functions.account.GetPrivacyRequest(
+                types.InputPrivacyKeyStatusTimestamp()
+            )
+        )
+        if isinstance(last_seen_status.rules, types.PrivacyValueAllowAll):
+            afk_time = datetime.datetime.now()  # pylint:disable=E0602
+        USER_AFK = f"yes: {reason}"  # pylint:disable=E0602
+        if reason:
+            await event.edit(f"My Mistress Is Going Afk ! And The Reason is {reason}")
         else:
-            cid = str(message.chat.id)
-
-        if cid in list(AFK_RESTIRECT) and int(AFK_RESTIRECT[cid]) >= int(
-            time.time()
-        ):
-            return
-        AFK_RESTIRECT[cid] = int(time.time()) + DELAY_TIME
-        if get['reason']:
-            await edrep(message, text=f"Sorry, {mention_markdown(Owner, OwnerName)} is AFK!\nBecause of {get['reason']}")
-        else:
-            await edrep(message, text=f"Sorry, {mention_markdown(Owner, OwnerName)} is AFK!")
-
-        _, message_type = get_message_type(message)
-        if message_type == Types.TEXT:
-            text = message.text or message.caption
-        else:
-            text = message_type.name
-
-        MENTIONED.append(
-            {"user": message.from_user.first_name, "user_id": message.from_user.id, "chat": message.chat.title,
-             "chat_id": cid, "text": text, "message_id": message.message_id})
-        button = InlineKeyboardMarkup(
-            [[InlineKeyboardButton("Go to message", url="https://t.me/c/{}/{}".format(cid, message.message_id))]])
-        await setbot.send_message(Owner, "{} mentioned you in {}\n\n{}\n\nTotal count: `{}`".format(
-            mention_markdown(message.from_user.id, message.from_user.first_name), message.chat.title, text[:3500],
-            len(MENTIONED)), reply_markup=button)
+            await event.edit(f"My Boss is Going")
+        await asyncio.sleep(5)
+        await event.delete()
+        try:
+            await borg.send_message(  # pylint:disable=E0602
+                Config.PLUGIN_CHANNEL,  # pylint:disable=E0602
+                f"#AfkLogger Reason : {reason}"
+            )
+        except Exception as e:  # pylint:disable=C0103,W0703
+            logger.warn(str(e))  # pylint:disable=E0602
 
 
-@app.on_message(filters.me & filters.group, group=12)
-async def no_longer_afk(_client, message):
-    if not DB_AVAILABLE:
+@borg.on(events.NewMessage(  # pylint:disable=E0602
+    incoming=True,
+    func=lambda e: bool(e.mentioned or e.is_private)
+))
+async def on_afk(event):
+    if event.fwd_from:
         return
-    global MENTIONED
-    get = get_afk()
-    if get and get['afk']:
-        await setbot.send_message(message.from_user.id, "You are no longer afk!")
-        set_afk(False, "")
-        text = "**Total {} mentioned you**\n".format(len(MENTIONED))
-        for x in MENTIONED:
-            msg_text = x["text"]
-            if len(msg_text) >= 11:
-                msg_text = "{}...".format(x["text"])
-            text += "- [{}](https://t.me/c/{}/{}) ({}): {}\n".format(escape_markdown(x["user"]), x["chat_id"],
-                                                                     x["message_id"], x["chat"], msg_text)
-        await setbot.send_message(message.from_user.id, text)
-        MENTIONED = []
+    global USER_AFK  # pylint:disable=E0602
+    global afk_time  # pylint:disable=E0602
+    global last_afk_message  # pylint:disable=E0602
+    afk_since = "`a while ago`"
+    current_message_text = event.message.message.lower()
+    if "afk" in current_message_text:
+        # userbot's should not reply to other userbot's
+        # https://core.telegram.org/bots/faq#why-doesn-39t-my-bot-see-messages-from-other-bots
+        return False
+    if USER_AFK and not (await event.get_sender()).bot:  # pylint:disable=E0602
+        if afk_time:  # pylint:disable=E0602
+            now = datetime.datetime.now()
+            datime_since_afk = now - afk_time  # pylint:disable=E0602
+            time = float(datime_since_afk.seconds)
+            days = time // (24 * 3600)
+            time = time % (24 * 3600)
+            hours = time // 3600
+            time %= 3600
+            minutes = time // 60
+            time %= 60
+            seconds = time
+            if days == 1:
+                afk_since = "**Yesterday**"
+            elif days > 1:
+                if days > 6:
+                    date = now + \
+                        datetime.timedelta(
+                            days=-days, hours=-hours, minutes=-minutes)
+                    afk_since = date.strftime("%A, %Y %B %m, %H:%I")
+                else:
+                    wday = now + datetime.timedelta(days=-days)
+                    afk_since = wday.strftime('%A')
+            elif hours > 1:
+                afk_since = f"`{int(hours)}h{int(minutes)}m` **ago**"
+            elif minutes > 0:
+                afk_since = f"`{int(minutes)}m{int(seconds)}s` **ago**"
+            else:
+                afk_since = f"`{int(seconds)}s` **ago**"
+        msg = None
+        message_to_reply = f"**My Boss is AFK** ! \n\n**Reason** : `{reason}` \n\n**Afk Since** : {afk_since}" + \
+            f"\n\n__Kindly Leave A Message__ ! \n`He Will Reply To You Soon !`" \
+            if reason \
+            else f"**Hello, Boss Is AFK Right Now And May Be Forgot List Reason ! Any Way He Will Come Back Soon !**"
+        msg = await event.reply(message_to_reply)
+        await asyncio.sleep(5)
+        if event.chat_id in last_afk_message:  # pylint:disable=E0602
+            await last_afk_message[event.chat_id].delete()  # pylint:disable=E0602
+        last_afk_message[event.chat_id] = msg  # pylint:disable=E0602
