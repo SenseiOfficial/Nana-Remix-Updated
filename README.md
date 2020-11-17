@@ -71,12 +71,14 @@ Fortunately there are no Mandatory vars for the UniBorg Support Config.
 
 ## Community
 
-~Have questions about Nana or facing issues? Join [Nana Support](https://t.me/NanaBotSupport) and our friendly
+~Have questions about Nana or facing issues? Join [Nana Support](https://t.me/nanarexixupdatedchat) and our friendly
 community will answer you some questions.
 
 <a href="https://t.me/nanarexixupdatedchat"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
 <a href="https://t.me/nanaremixupdated"><img src="https://img.shields.io/badge/Join-Telegram%20Group-blue.svg?logo=telegram"></a>
-    Contact [Sensei_nex](https://t.me/nex_nex_nexu) on telegram if you have any queries reagrding bug fixes or anything . feel free to contact 
+    
+    
+    ~ Contact [Sensei_nex](https://t.me/nex_nex_nexu)on telegram if you have any queries reagrding bug fixes or anything . feel free to contact anytime .
 
 ### Credits
 
@@ -85,4 +87,4 @@ community will answer you some questions.
 - [Ayra Hikari](https://github.com/AyraHikari)
 - [LegenHand](https://github.com/legenhand)
 - [RealAkito](https://github.com/RealAkito)
-- [Sensei_nex](https://t.me/nex_nex_nexu)
+- [Sensei_nex](https://t.me/nex_nex_nexu) Owner of this updated repo
