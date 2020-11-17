@@ -4,9 +4,12 @@
 
 ![Enterprise](https://telegra.ph/file/c575ed42ae2cd419f23e3.jpg)
 
+~ [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d560b5d6cb1147f98c92a1201217d362)](https://app.codacy.com/manual/AmaanAhmed/Nana-Remix?utm_source=github.com&utm_medium=referral&utm_content=pokurt/Nana-Remix&utm_campaign=Badge_Grade_Dashboard) [![CircleCI](https://circleci.com/gh/pokurt/Nana-Remix.svg?style=svg)](https://circleci.com/gh/pokurt/Nana-Remix) ![Repo Size](https://img.shields.io/github/repo-size/pokurt/Nana-Remix) [![HitCount](http://hits.dwyl.com/pokurt/Nana-Remix.svg)](http://hits.dwyl.com/pokurt/Nana-Remix) [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/pokurt/Nana-Remix) ![>~<](https://img.shields.io/badge/%3E~%3C-nyaaa~-purple)
 
-## Nana-Remix updated v 2.0 By [Sensei](t.me/nex_nex_nexu)
+## Nana-Remix updated v 2.0 By [Sensei](https://t.me/nex_nex_nexu)
 
 ## Most Advanced Pyrogram Userbot + Assistant for Telegram 
 
@@ -16,7 +19,7 @@ and Please give a star to us and the orignal repo for appreciating our hardwork.
 
 ## Installation Guide
 
-See our documentation to get [Installation Guide](https://aman-a.gitbook.io/nana-remix).
+~See our documentation to get [Installation Guide](https://aman-a.gitbook.io/nana-remix).
 ## Installing Heroku 
 
 ### The Easy Way
@@ -24,7 +27,7 @@ See our documentation to get [Installation Guide](https://aman-a.gitbook.io/nana
 
 ## GET STRING SESSION FROM REPL RUN 
 
-## [![Get String Session online](https://repl.it/badge/github/Crackexy/StringSession)](https://stringsession.crackexy.repl.run/)
+## [![Get String Session online](https://repl.it/badge/github/Crackexy/StringSession)](https://generatestringsession.spechide.repl.run/)
 
 
 ### The Simple Way
@@ -66,21 +69,14 @@ Simply just leave the Config as it is.
 **Local Configuration**
 Fortunately there are no Mandatory vars for the UniBorg Support Config.
 
-## Mandatory Vars
-
-- Only two of the environment variables are mandatory.
-- This is because of `telethon.errors.rpc_error_list.ApiIdPublishedFloodError`
-    - `APP_ID`:   You can get this value from https://my.telegram.org
-    - `API_HASH`:   You can get this value from https://my.telegram.org
-- The userbot will not work without setting the mandatory vars.
-
-
-
-
 ## Community
 
-Have questions about Nana or facing issues? Join [Nana Support](https://t.me/NanaBotSupport) and our friendly
+~Have questions about Nana or facing issues? Join [Nana Support](https://t.me/NanaBotSupport) and our friendly
 community will answer you some questions.
+
+<a href="https://t.me/nanarexixupdatedchat"><img src="https://img.shields.io/badge/Join-Telegram%20Channel-red.svg?logo=Telegram"></a>
+<a href="https://t.me/nanaremixupdated"><img src="https://img.shields.io/badge/Join-Telegram%20Group-blue.svg?logo=telegram"></a>
+    Contact [Sensei_nex](https://t.me/nex_nex_nexu) on telegram if you have any queries reagrding bug fixes or anything . feel free to contact 
 
 ### Credits
 
